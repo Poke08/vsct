@@ -1,1 +1,0 @@
-User requested a modern site for their fictional eNascar league, VSCT. The design includes navigation, hero image, logo, schedule, signup, and footer. Unsplash images used as fallback after DALL-E failed.
