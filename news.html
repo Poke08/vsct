@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>News - Virtual Stock Car Tour (VSCT)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>VSCT</strong></li>
+    </ul>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="news.html">News</a></li>
+      <li><a href="standings.html">Standings</a></li>
+      <li><a href="schedule.html">Schedule</a></li>
+      <li><a href="signup.html" role="button">Signup</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <hgroup>
+      <h1>VSCT News</h1>
+      <h2>Latest updates from the Virtual Stock Car Tour</h2>
+    </hgroup>
+
+    <section id="news-section">
+      <article>
+        <p><em>Loading news articles...</em></p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="container">
+    <small><a href="#">Privacy Policy</a> • <a href="#">Contact</a></small>
+  </footer>
+
+  <script>
+    // Load news from localStorage
+    function loadNews() {
+      const news = JSON.parse(localStorage.getItem('vsct_news') || '[]');
+      const newsSection = document.getElementById('news-section');
+
+      if (news.length === 0) {
+        newsSection.innerHTML = '<article><p><em>No news articles available at this time.</em></p></article>';
+      } else {
+        newsSection.innerHTML = news.map(article => `
+          <article>
+            <header>
+              <h3>${article.title}</h3>
+              <small>Posted on ${article.date}</small>
+            </header>
+            <p>${article.content}</p>
+            <footer>
+              <small>By ${article.author}</small>
+            </footer>
+          </article>
+        `).join('');
+      }
+    }
+
+    // Load news when page loads
+    document.addEventListener('DOMContentLoaded', loadNews);
+
+    // Refresh news every 5 seconds to show updates from admin
+    setInterval(loadNews, 5000);
+  </script>
+</body>
+</html>

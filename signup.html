@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign Up - Virtual Stock Car Tour (VSCT)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>VSCT</strong></li>
+    </ul>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="news.html">News</a></li>
+      <li><a href="standings.html">Standings</a></li>
+      <li><a href="schedule.html">Schedule</a></li>
+      <li><a href="signup.html" role="button">Signup</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <div class="grid">
+      <section>
+        <hgroup>
+          <h1>Join the Virtual Stock Car Tour</h1>
+          <h2>Ready to race? Sign up today!</h2>
+        </hgroup>
+
+        <article>
+          <header>
+            <h3>Driver Registration</h3>
+          </header>
+          <form>
+            <div class="grid">
+              <label for="firstname">
+                First Name
+                <input type="text" id="firstname" name="firstname" placeholder="Your first name" required />
+              </label>
+              <label for="lastname">
+                Last Name
+                <input type="text" id="lastname" name="lastname" placeholder="Your last name" required />
+              </label>
+            </div>
+            
+            <label for="email">
+              Email Address
+              <input type="email" id="email" name="email" placeholder="your.email@example.com" required />
+            </label>
+            
+            <label for="iracing-id">
+              iRacing ID
+              <input type="text" id="iracing-id" name="iracing-id" placeholder="Your iRacing customer ID" required />
+            </label>
+            
+            <label for="experience">
+              Racing Experience
+              <select id="experience" name="experience" required>
+                <option value="">Select your experience level</option>
+                <option value="beginner">Beginner (0-1 years)</option>
+                <option value="intermediate">Intermediate (1-3 years)</option>
+                <option value="advanced">Advanced (3+ years)</option>
+                <option value="professional">Professional/Semi-Pro</option>
+              </select>
+            </label>
+            
+            <label for="car-number">
+              Preferred Car Number
+              <input type="number" id="car-number" name="car-number" placeholder="Enter a number 1-99" min="1" max="99" />
+              <small>Subject to availability</small>
+            </label>
+            
+            <fieldset>
+              <legend>Racing Categories (Select all that apply)</legend>
+              <label for="oval">
+                <input type="checkbox" id="oval" name="categories" value="oval" />
+                Oval Racing
+              </label>
+              <label for="road">
+                <input type="checkbox" id="road" name="categories" value="road" />
+                Road Course
+              </label>
+              <label for="dirt">
+                <input type="checkbox" id="dirt" name="categories" value="dirt" />
+                Dirt Track
+              </label>
+            </fieldset>
+            
+            <label for="terms">
+              <input type="checkbox" id="terms" name="terms" required />
+              I agree to the VSCT rules and regulations
+            </label>
+            
+            <button type="submit">
+              Complete Registration
+            </button>
+          </form>
+        </article>
+
+        <article>
+          <header>
+            <h3>Requirements</h3>
+          </header>
+          <ul>
+            <li>Valid iRacing subscription</li>
+            <li>Minimum Class D license</li>
+            <li>Stable internet connection</li>
+            <li>Racing wheel recommended</li>
+            <li>Microphone for team communication</li>
+          </ul>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <footer class="container">
+    <small><a href="#">Privacy Policy</a> • <a href="#">Contact</a></small>
+  </footer>
+  
+  <script src="signup.js"></script>
+</body>
+</html>

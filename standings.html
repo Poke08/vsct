@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Standings - Virtual Stock Car Tour (VSCT)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>VSCT</strong></li>
+    </ul>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="news.html">News</a></li>
+      <li><a href="standings.html">Standings</a></li>
+      <li><a href="schedule.html">Schedule</a></li>
+      <li><a href="signup.html" role="button">Signup</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <hgroup>
+      <h1>Championship Standings</h1>
+      <h2>2024 Season Points Leader Board</h2>
+    </hgroup>
+
+    <section>
+      <figure>
+        <table>
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Driver</th>
+              <th>Points</th>
+              <th>Wins</th>
+
+  <script>
+    // Load standings from localStorage
+    function loadStandings() {
+      const drivers = JSON.parse(localStorage.getItem('vsct_drivers') || '[]');
+      const tbody = document.querySelector('tbody');
+      
+      if (drivers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6"><em>No standings available. Points will be updated after races begin.</em></td></tr>';
+      } else {
+        // Sort drivers by points (descending)
+        const sortedDrivers = drivers.sort((a, b) => b.points - a.points);
+        
+        tbody.innerHTML = sortedDrivers.map((driver, index) => `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${driver.name} (#${driver.carNumber})</td>
+            <td>${driver.points}</td>
+            <td>${driver.wins}</td>
+            <td>${driver.top5s}</td>
+            <td>${driver.top10s}</td>
+          </tr>
+        `).join('');
+      }
+    }
+    
+    // Load standings when page loads
+    document.addEventListener('DOMContentLoaded', loadStandings);
+  </script>
+
+              <th>Top 5s</th>
+              <th>Top 10s</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="6"><em>No standings available. Points will be updated after races begin.</em></td>
+            </tr>
+          </tbody>
+        </table>
+        <figcaption>Standings will be updated after each race</figcaption>
+      </figure>
+    </section>
+  </main>
+
+  <footer class="container">
+    <small><a href="#">Privacy Policy</a> • <a href="#">Contact</a></small>
+  </footer>
+</body>
+</html>

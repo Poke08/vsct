@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard - Virtual Stock Car Tour (VSCT)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-section {
+      margin-bottom: 3rem;
+    }
+    .pending-requests {
+      background-color: var(--card-background-color);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .hidden {
+      display: none;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background-color: var(--card-background-color);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    .drag-drop-container {
+      background-color: var(--card-background-color);
+      border: 2px dashed var(--muted-border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      min-height: 100px;
+    }
+    .draggable-item {
+      background-color: var(--card-background-color);
+      border: 1px solid var(--muted-border-color);
+      border-radius: 0.25rem;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      cursor: move;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .draggable-item:hover {
+      background-color: var(--card-sectionning-background-color);
+      border-color: var(--primary);
+    }
+    .draggable-item.dragging {
+      opacity: 0.5;
+      transform: rotate(5deg);
+    }
+    .drag-drop-container.drag-over {
+      border-color: var(--primary);
+      background-color: var(--card-sectionning-background-color);
+    }
+    .race-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .driver-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .item-info {
+      flex-grow: 1;
+    }
+    .item-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Section -->
+  <div id="login-section" class="container">
+    <article style="margin-top: 5rem;">
+      <header>
+        <h1>VSCT Admin Login</h1>
+        <p>Enter admin credentials to access the dashboard</p>
+      </header>
+      <form id="login-form">
+        <label for="admin-username">
+          Username
+          <input type="text" id="admin-username" placeholder="Admin username" required />
+        </label>
+        <label for="admin-password">
+          Password
+          <input type="password" id="admin-password" placeholder="Admin password" required />
+        </label>
+        <button type="submit">Login</button>
+      </form>
+    </article>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="admin-dashboard" class="hidden">
+    <nav class="container-fluid">
+      <ul>
+        <li><strong>VSCT Admin</strong></li>
+      </ul>
+      <ul>
+        <li><a href="index.html">View Site</a></li>
+        <li><button onclick="logout()" class="outline">Logout</button></li>
+      </ul>
+    </nav>
+
+    <main class="container">
+      <hgroup>
+        <h1>Admin Dashboard</h1>
+        <h2>Virtual Stock Car Tour Management</h2>
+      </hgroup>
+
+      <!-- Statistics -->
+      <section class="admin-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3>Overview</h3>
+          <button onclick="clearAllExceptDrivers()" class="outline" style="color: red;">Clear All Data (Keep Drivers)</button>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="pending-count">0</div>
+            <div>Pending Signups</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="total-drivers">0</div>
+            <div>Total Drivers</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="races-completed">0</div>
+            <div>Races Completed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="races-scheduled">0</div>
+            <div>Races Scheduled</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pending Signup Requests -->
+      <section class="admin-section">
+        <h3>Pending Signup Requests</h3>
+        <div id="signup-requests">
+          <p><em>No pending signup requests at this time.</em></p>
+        </div>
+      </section>
+
+      <!-- News Management -->
+      <section class="admin-section">
+        <h3>News Management</h3>
+        <article>
+          <header>
+            <h4>Post New Article</h4>
+          </header>
+          <form id="news-form">
+            <label for="news-title">
+              Article Title
+              <input type="text" id="news-title" placeholder="Enter article title" required />
+            </label>
+            <label for="news-content">
+              Article Content
+              <textarea id="news-content" rows="5" placeholder="Enter article content" required></textarea>
+            </label>
+            <label for="news-author">
+              Author
+              <input type="text" id="news-author" placeholder="Author name" value="VSCT Administration" />
+            </label>
+            <button type="submit">Publish Article</button>
+          </form>
+        </article>
+      </section>
+
+      <!-- Schedule Management -->
+      <section class="admin-section">
+        <h3>Schedule Management</h3>
+        <article>
+          <header>
+            <h4>Add New Race</h4>
+          </header>
+          <form id="schedule-form">
+            <div class="grid">
+              <label for="race-week">
+                Week
+                <input type="number" id="race-week" placeholder="Week number" min="1" max="20" required />
+              </label>
+              <label for="race-date">
+                Date
+                <input type="date" id="race-date" required />
+              </label>
+            </div>
+            <label for="race-track">
+              Track
+              <input type="text" id="race-track" placeholder="Track name" required />
+            </label>
+            <label for="race-type">
+              Race Type
+              <select id="race-type" required>
+                <option value="">Select race type</option>
+                <option value="Regular Season">Regular Season</option>
+                <option value="Playoff">Playoff</option>
+                <option value="Championship">Championship</option>
+                <option value="Special Event">Special Event</option>
+              </select>
+            </label>
+            <button type="submit">Add Race</button>
+          </form>
+        </article>
+        
+        <article>
+          <header>
+            <h4>Reorder Schedule (Drag & Drop)</h4>
+            <p><small>Drag races to reorder them. Week numbers will be automatically updated.</small></p>
+          </header>
+          <div id="schedule-drag-container" class="drag-drop-container">
+            <p><em>No races scheduled. Add races above to start reordering.</em></p>
+          </div>
+        </article>
+      </section>
+
+      <!-- Standings Management -->
+      <section class="admin-section">
+        <h3>Standings Management</h3>
+        <article>
+          <header>
+            <h4>Update Driver Points</h4>
+          </header>
+          <form id="standings-form">
+            <label for="driver-select">
+              Select Driver
+              <select id="driver-select" required>
+                <option value="">Choose driver</option>
+                <option value="" disabled>No drivers registered yet</option>
+              </select>
+            </label>
+            <div class="grid">
+              <label for="race-points">
+                Race Points
+                <input type="number" id="race-points" placeholder="Points earned" min="0" max="50" />
+              </label>
+              <label for="bonus-points">
+                Bonus Points
+                <input type="number" id="bonus-points" placeholder="Bonus points" min="0" max="10" value="0" />
+              </label>
+            </div>
+            <label for="race-result">
+              Race Result
+              <select id="race-result">
+                <option value="">Select finish position</option>
+                <option value="1">1st Place</option>
+                <option value="2">2nd Place</option>
+                <option value="3">3rd Place</option>
+                <option value="4">4th Place</option>
+                <option value="5">5th Place</option>
+                <option value="dnf">DNF</option>
+              </select>
+            </label>
+            <button type="submit">Update Points</button>
+          </form>
+        </article>
+
+        <article>
+          <header>
+            <h4>Reorder Standings (Drag & Drop)</h4>
+            <p><small>Drag drivers to manually adjust their championship positions. Points remain unchanged.</small></p>
+          </header>
+          <div id="standings-drag-container" class="drag-drop-container">
+            <p><em>No drivers registered. Approve signups to start managing standings.</em></p>
+          </div>
+        </article>
+      </section>
+
+      <!-- Driver Management -->
+      <section class="admin-section">
+        <h3>Driver Management</h3>
+        <article>
+          <header>
+            <h4>Manage Existing Drivers</h4>
+          </header>
+          <table>
+            <thead>
+              <tr>
+                <th>Driver</th>
+                <th>Car #</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="4"><em>No registered drivers at this time.</em></td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
